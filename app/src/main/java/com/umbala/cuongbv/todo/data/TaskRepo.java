@@ -23,7 +23,7 @@ public class TaskRepo implements TaskRepository {
 
     @Override
     public List<Task> getAllTask() {
-        return null;
+        return tasks;
     }
 
     @Override

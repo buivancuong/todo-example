@@ -63,7 +63,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskDescription = itemView.findViewById(R.id.taskdescription);
             reminder = itemView.findViewById(R.id.reminder);
             imageView = itemView.findViewById(R.id.imageView);
-            checkBox = imageView.findViewById(R.id.checkBox);
+            checkBox = itemView.findViewById(R.id.checkBox);
 
         }
 
