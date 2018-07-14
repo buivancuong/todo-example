@@ -1,5 +1,6 @@
 package com.umbala.cuongbv.todo.ui.main;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,12 +14,16 @@ import com.umbala.cuongbv.todo.model.Task;
 
 import java.util.List;
 
+/**
+ * lớp này là một khai triển của interface {@link MainContractor.View}
+ */
 public class MainActivity extends AppCompatActivity implements MainContractor.View {
 
     RecyclerView recyclerView;
     TextView textViewEstimateTime;
     TaskAdapter taskAdapter;
     Presenter presenter;
+    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,10 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         recyclerView = findViewById(R.id.tasklist);
         textViewEstimateTime = findViewById(R.id.textView);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage("Loading");
+
         taskAdapter = new TaskAdapter();
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -35,7 +44,16 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
         presenter = new Presenter(new TaskRepo(), this);
         presenter.getTaskList();
+    }
 
+    @Override
+    public void showLoading() {
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        mProgressDialog.hide();
     }
 
     @Override
