@@ -14,8 +14,11 @@ import com.umbala.cuongbv.todo.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
+/**
+ * lớp này có tác dụng là cầu nối giữa danh sách các task cần hiển thị và RecyclerView
+ * hay nói cách khác, lớp này sẽ lấy danh sách task để đổ vào view (hiển thị cho người dùng)
+ */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     List<Task> tasks;
@@ -24,11 +27,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         tasks = new ArrayList<>();
     }
 
+    /**
+     * phương thức này để cập nhật danh sách task trên view
+     * giả sử danh sách task trên view cần cập nhật bằng cách thay đổi danh sách task
+     * thì truyền danh sách task mới vào phương thức này, sau đó danh sách mới sẽ được
+     * tự động cập nhật trên RecyclerView
+     *
+     * @param tasks
+     */
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
     }
 
+    /**
+     * phương thức này sẽ khởi tạo ra một số lượng ViewHolder nhất định phù hợp với
+     * kích thước có thể hiển thị của màn hình. ví dụ màn hình có thể hiển thị một lúc 10 item
+     * thì phương thức này sẽ sinh ra trên dưới 12 ViewHolder để giữ các view phục vụ cho việc
+     * hiển thị của mỗi item. tham khảo thêm {@link TaskViewHolder}
+     *
+     * @param viewGroup
+     * @param i
+     * @return
+     */
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -38,6 +59,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(view);
     }
 
+    /**
+     * phương thức này sẽ đổ dữ liệu của một task vào ViewHolder
+     * ví dụ khi người dùng scroll RecyclerView lên hoặc xuống thì một item bên trong
+     * RecyclerView sẽ được kéo ra ngoài và một item bên ngoài RecyclerView sẽ được kéo
+     * vào trong RecyclerView, lúc đó phương thức này sẽ được gọi đến để đổ dữ liệu của
+     * task được kéo vào trong RecyclerView lên View được giữ bởi ViewHolder tương ứng
+     *
+     * @param taskViewHolder
+     * @param i
+     */
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder taskViewHolder, int i) {
 
@@ -45,11 +76,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
+    /**
+     * trả về số lượng item trong danh sách task
+     * phục vụ cho các phương thức build-in của Adapter
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         return tasks.size();
     }
 
+    /**
+     * đây là class có nhiều ý nghĩa nhất của RecyclerView
+     * class này là các ViewHolder, có tác dụng lưu giữ các View đã được tạo ra bởi
+     * Adapter, đổ dữ liệu từ model lên view và tái sử dụng lại các View đã được tạo ra,
+     * làm tăng hiệu năng hoạt động của RecyclerView rất nhiều so với ListView
+     *
+     */
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView taskname, taskDescription, reminder;
@@ -67,6 +111,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         }
 
+        /**
+         * tham khảo thêm phương thức onBindViewHolder bên trên
+         *
+         * @param task
+         */
         public void bindTask(Task task) {
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());

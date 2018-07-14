@@ -5,6 +5,12 @@ import com.umbala.cuongbv.todo.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * lớp này tạo ra giữ liệu giả để test các khối khác khi chưa triển khai được Database hoặc API
+ * lớp này cũng là một ví dụ cụ thể cho việc liên kết lỏng lẻo giữa tầng data
+ * và tầng ui (tham khảo thêm {@link TaskRepository})
+ *
+ */
 public class TaskRepo implements TaskRepository {
 
     ArrayList<Task> tasks;
