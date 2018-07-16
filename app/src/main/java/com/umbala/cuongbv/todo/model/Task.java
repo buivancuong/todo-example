@@ -1,7 +1,13 @@
 package com.umbala.cuongbv.todo.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,15 +20,29 @@ import java.util.UUID;
  * Headfirst Design Pattern của nhà xuất bản O'Reilly
  *
  */
-public class Task implements Comparable<Task> {
+@Entity(tableName = "task")
+public class Task implements Comparable<Task>,Parcelable {
 
+    @ColumnInfo(name = "task_name")
     private String taskName;
+    @ColumnInfo(name = "task_content")
     private String taskContent;
+    @ColumnInfo(name = "task_priority")
     private int taskPriority;
-    private long taskEstimateTime;
+    @ColumnInfo(name = "task_estimate_time")
+    private double taskEstimateTime;
+    @ColumnInfo(name = "task_reminder")
     private long taskReminder;
+    @ColumnInfo(name = "task_done_state")
     private int taskDoneState;
+    @NonNull
+    @PrimaryKey()
+    @ColumnInfo(name = "task_id")
     private String taskID;
+
+    public Task(){
+
+    }
 
     private Task(Builder builder) {
         this.taskName = builder.taskName;
@@ -32,6 +52,32 @@ public class Task implements Comparable<Task> {
         this.taskReminder = builder.taskReminder;
         this.taskDoneState = builder.taskDoneState;
         this.taskID = UUID.randomUUID().toString();
+    }
+
+    protected Task(Parcel in) {
+        taskName = in.readString();
+        taskContent = in.readString();
+        taskPriority = in.readInt();
+        taskEstimateTime = in.readDouble();
+        taskReminder = in.readLong();
+        taskDoneState = in.readInt();
+        taskID = in.readString();
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
+
+    public void setTaskID(String taskID) {
+        this.taskID = taskID;
     }
 
     /**
@@ -49,12 +95,28 @@ public class Task implements Comparable<Task> {
         return Integer.compare(this.taskDoneState, task.taskDoneState);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(taskName);
+        parcel.writeString(taskContent);
+        parcel.writeInt(taskPriority);
+        parcel.writeDouble(taskEstimateTime);
+        parcel.writeLong(taskReminder);
+        parcel.writeInt(taskDoneState);
+        parcel.writeString(taskID);
+    }
+
     public static class Builder {
 
         private String taskName = "";
         private String taskContent = "";
         private int taskPriority = 3;
-        private long taskEstimateTime = 0;
+        private double taskEstimateTime = 0;
         private long taskReminder = 0; // ms
         private int taskDoneState = 0;
 
@@ -73,7 +135,7 @@ public class Task implements Comparable<Task> {
             return this;
         }
 
-        public Builder setTaskEstimateTime (long estimateTime) {
+        public Builder setTaskEstimateTime (double estimateTime) {
             taskEstimateTime = estimateTime;
             return this;
         }
@@ -105,7 +167,7 @@ public class Task implements Comparable<Task> {
         return taskPriority;
     }
 
-    public long getTaskEstimateTime() {
+    public double getTaskEstimateTime() {
         return taskEstimateTime;
     }
 
@@ -117,6 +179,10 @@ public class Task implements Comparable<Task> {
         return taskDoneState;
     }
 
+    public void setTaskDoneState(int taskDoneState) {
+        this.taskDoneState = taskDoneState;
+    }
+
     public String getTaskID() {
         return taskID;
     }
@@ -126,8 +192,36 @@ public class Task implements Comparable<Task> {
     }
 
     public String getRemindDate() {
+       return getStringPattern("dd/MM/yyyy");
+    }
+
+    public String getRemindTime() {
+        return getStringPattern("HH/mm/ss");
+    }
+
+    private String getStringPattern(String string) {
         Date date = new Date(taskReminder);
-        DateFormat dateFormat = new SimpleDateFormat("dd:MM:yy - HH:mm:ss", Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat(string, Locale.US);
         return dateFormat.format(date);
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setTaskContent(String taskContent) {
+        this.taskContent = taskContent;
+    }
+
+    public void setTaskPriority(int taskPriority) {
+        this.taskPriority = taskPriority;
+    }
+
+    public void setTaskEstimateTime(double taskEstimateTime) {
+        this.taskEstimateTime = taskEstimateTime;
+    }
+
+    public void setTaskReminder(long taskReminder) {
+        this.taskReminder = taskReminder;
     }
 }

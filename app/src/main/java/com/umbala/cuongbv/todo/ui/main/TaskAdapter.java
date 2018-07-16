@@ -1,11 +1,13 @@
 package com.umbala.cuongbv.todo.ui.main;
 
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +25,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     List<Task> tasks;
 
+    ClickListener clickListener;
+
     public TaskAdapter() {
         tasks = new ArrayList<>();
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     /**
@@ -35,6 +43,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
      *
      * @param tasks
      */
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
@@ -99,6 +108,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView taskname, taskDescription, reminder;
         ImageView imageView;
         CheckBox checkBox;
+        ConstraintLayout taskItem;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,6 +118,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             reminder = itemView.findViewById(R.id.reminder);
             imageView = itemView.findViewById(R.id.imageView);
             checkBox = itemView.findViewById(R.id.checkBox);
+            taskItem = itemView.findViewById(R.id.taskItem);
 
         }
 
@@ -116,10 +127,42 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
          *
          * @param task
          */
-        public void bindTask(Task task) {
+        public void bindTask(final Task task) {
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
             reminder.setText(task.getRemindDate());
+
+            taskItem.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onItemLongClick(task);
+                    }
+                    return false;
+                }
+            });
+
+            taskItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onItemClicked(task);
+                    }
+                }
+            });
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                    boolean ischecked = (task.getTaskDoneState() == 1);
+                    if (clickListener != null && ischecked != b) {
+                        task.setTaskDoneState(b ? 1 : 0);
+                        clickListener.onDoneStateChanged(task);
+
+                    }
+                }
+            });
 
             switch (task.getTaskPriority()){
                 case 1:
@@ -140,4 +183,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
+    interface ClickListener {
+        void onItemClicked(Task task);
+        void onItemLongClick(Task task);
+        void onDoneStateChanged(Task task);
+    }
 }

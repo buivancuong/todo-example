@@ -56,10 +56,16 @@ public interface MainContractor {
      * xem thêm {@link com.umbala.cuongbv.todo.ui.main.Presenter} để hiểu thêm hoạt động của
      * tầng này
      *
+     *
+     * bên Edit có 1 itf ShowTask{} nhận dữ liệu từ task cần sửa
      */
     interface Presenter{
 
         void getTaskList();
+
+        void delTask(String id);
+
+        void updateTask(Task task);
 
     }
 

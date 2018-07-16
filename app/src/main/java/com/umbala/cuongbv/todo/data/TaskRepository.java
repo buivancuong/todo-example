@@ -36,5 +36,4 @@ public interface TaskRepository {
 
     void updateTask(Task task);
 
-    List<Task> getSortTaskList();
 }

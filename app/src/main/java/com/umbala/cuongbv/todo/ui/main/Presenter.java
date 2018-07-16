@@ -2,6 +2,7 @@ package com.umbala.cuongbv.todo.ui.main;
 
 import android.os.Handler;
 
+import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.data.TaskRepository;
 import com.umbala.cuongbv.todo.model.Task;
 
@@ -27,6 +28,8 @@ public class Presenter implements MainContractor.Presenter {
      * thể hiện rằng dữ liệu đang được load. sau khi load thành công thì
      * ẩn dialog loading này đi
      *
+     *
+     * Bên edit
      */
     @Override
     public void getTaskList() {
@@ -40,6 +43,19 @@ public class Presenter implements MainContractor.Presenter {
             }
         }, 2000); //fake delay trong 2 giây
     }
+
+    @Override
+    public void delTask(String id) {
+        taskRepository.delTask(id);
+        getTaskList();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        taskRepository.updateTask(task);
+        getTaskList();
+    }
+
 
     public Presenter(TaskRepository taskRepository, MainContractor.View view) {
         this.taskRepository = taskRepository;
