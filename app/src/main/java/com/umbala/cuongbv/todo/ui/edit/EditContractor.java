@@ -11,6 +11,7 @@ public interface EditContractor {
     interface View{
 
         void showEditTask(@NonNull Task task);
+        void exitActivity();
 
     }
 

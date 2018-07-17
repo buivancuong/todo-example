@@ -4,6 +4,8 @@ import com.umbala.cuongbv.todo.model.Task;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * interface này là giao diện chung cho phần xử lý dữ liệu của model {@link Task}
  * tất cả các phần xử lý dữ liệu liên quan đến task ví dụ như trao dữ liệu từ API,
@@ -21,19 +23,19 @@ public interface TaskRepository {
      * get all task from task list on DB
      * @return list of Tasks
      */
-    List<Task> getAllTask();
+    Observable<List<Task>> getAllTask();
 
     /**
      * get 1 task from task list by id
      * @param id
      * @return
      */
-    Task getTask(String id);
+    Observable<Task> getTask(String id);
 
-    void addTask(Task task);
+    Observable addTask(Task task);
 
-    void delTask(String id);
+    Observable delTask(String id);
 
-    void updateTask(Task task);
+    Observable updateTask(Task task);
 
 }

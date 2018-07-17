@@ -1,18 +1,20 @@
 package com.umbala.cuongbv.todo.ui.main;
 
-import android.os.Handler;
 
-import com.umbala.cuongbv.todo.data.TaskRepo;
+
 import com.umbala.cuongbv.todo.data.TaskRepository;
 import com.umbala.cuongbv.todo.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * là một sự triển khai của {@link MainContractor.Presenter}
  * lớp này sẽ phụ trách triển khai các chức năng được khai báo trong MainContractor.Presenter
- *
  */
 public class Presenter implements MainContractor.Presenter {
 
@@ -27,33 +29,95 @@ public class Presenter implements MainContractor.Presenter {
      * để người dùng không có cảm giác chờ đợi thì nên hiển thị một dialog
      * thể hiện rằng dữ liệu đang được load. sau khi load thành công thì
      * ẩn dialog loading này đi
-     *
-     *
+     * <p>
+     * <p>
      * Bên edit
      */
     @Override
     public void getTaskList() {
         view.showLoading();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                view.hideLoading();
-                List<Task> tasks = taskRepository.getAllTask();
-                view.showTaskList(tasks);
-            }
-        }, 2000); //fake delay trong 2 giây
+        taskRepository.getAllTask()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Task>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Task> tasks) {
+                        view.showTaskList(tasks);
+                        view.hideLoading();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     @Override
     public void delTask(String id) {
-        taskRepository.delTask(id);
-        getTaskList();
+        taskRepository.delTask(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        getTaskList();
+                    }
+                });
     }
 
     @Override
     public void updateTask(Task task) {
-        taskRepository.updateTask(task);
-        getTaskList();
+        taskRepository.updateTask(task)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        getTaskList();
+                    }
+                });
     }
 
 

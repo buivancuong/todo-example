@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+
 /**
  * lớp này tạo ra giữ liệu giả để test các khối khác khi chưa triển khai được Database hoặc API
  * lớp này cũng là một ví dụ cụ thể cho việc liên kết lỏng lẻo giữa tầng data
@@ -40,30 +43,58 @@ public class TaskRepo implements TaskRepository {
     }
 
     @Override
-    public List<Task> getAllTask() {
-        List<Task> tasks = database.taskDAO().getAllTask();
-        Collections.sort(tasks);
-        return tasks;
+    public Observable<List<Task>> getAllTask() {
+        return new Observable<List<Task>>() {
+            @Override
+            protected void subscribeActual(Observer<? super List<Task>> observer) {
+                final List<Task> tasks = database.taskDAO().getAllTask();
+                Collections.sort(tasks);
+                observer.onNext(tasks);
+            }
+        };
     }
 
     @Override
-    public Task getTask(String id) {
-        return database.taskDAO().getTask(id);
+    public Observable<Task> getTask(final String id) {
+        return new Observable<Task>() {
+            @Override
+            protected void subscribeActual(Observer<? super Task> observer) {
+                observer.onNext(database.taskDAO().getTask(id));
+            }
+        };
     }
 
     @Override
-    public void addTask(Task task) {
-        database.taskDAO().addTask(task);
+    public Observable addTask(final Task task) {
+        return new Observable() {
+            @Override
+            protected void subscribeActual(Observer observer) {
+                database.taskDAO().addTask(task);
+                observer.onComplete();
+            }
+        };
     }
 
     @Override
-    public void delTask(String id) {
-        database.taskDAO().delTask(id);
+    public Observable delTask(final String id) {
+        return new Observable() {
+            @Override
+            protected void subscribeActual(Observer observer) {
+                database.taskDAO().delTask(id);
+                observer.onComplete();
+            }
+        };
     }
 
     @Override
-    public void updateTask(Task task) {
-        database.taskDAO().updateTask(task);
+    public Observable updateTask(final Task task) {
+        return new Observable() {
+            @Override
+            protected void subscribeActual(Observer observer) {
+                database.taskDAO().updateTask(task);
+                observer.onComplete();
+            }
+        };
     }
 
 }

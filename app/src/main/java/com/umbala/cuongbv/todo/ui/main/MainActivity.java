@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Loading");
-
+/*
         taskAdapter = new TaskAdapter();
         taskAdapter.setClickListener(this);
         recyclerView.setAdapter(taskAdapter);
@@ -59,15 +59,13 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
         presenter = new Presenter(TaskRepo.getInstance(this), this);
         presenter.getTaskList();
-
+*/
         findViewById(R.id.addTask).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(EditActivity.getStartIntent(MainActivity.this, null), 1); // 1: add task
             }
         });
-
-
 
     }
 

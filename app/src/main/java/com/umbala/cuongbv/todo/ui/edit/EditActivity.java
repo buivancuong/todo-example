@@ -21,6 +21,8 @@ import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
 import com.umbala.cuongbv.todo.ui.main.MainActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class EditActivity extends AppCompatActivity implements EditContractor.View {
@@ -32,11 +34,13 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
     RadioButton greenButton, yellowButton, redButton;
     Button okButton, cancelButton;
 
-    public static Intent getStartIntent(Context context, Task task){
+    public static Intent getStartIntent(Context context, Task task) {
         Intent intent = new Intent(context, EditActivity.class);
         intent.putExtra(TASK, task);
         return intent;
-    };
+    }
+
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,63 +70,61 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         taskTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Calendar calendarTime = Calendar.getInstance();
                 new TimePickerDialog(EditActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        presenter.setHour(timePicker.getCurrentHour());
-                        presenter.setMinute(timePicker.getCurrentMinute());
-                        Log.i("Test", presenter.getHour() + ":" + presenter.getMinute());
-                        taskTime.setText(presenter.getHour() + ":" + presenter.getMinute());
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                        calendarTime.set(1995, 8, 2, i, i1);
+                        taskTime.setText(simpleDateFormat.format(calendarTime.getTime()));
                     }
                 }, 0, 0, true).show();
             }
         });
 
-        taskDate.setOnClickListener(new View.OnClickListener() {
+        taskDate.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
+                final Calendar calendarDate = Calendar.getInstance();
+                presenter.getTask().getTaskReminder()[2] = calendarDate.get(Calendar.DATE);
+                presenter.getTask().getTaskReminder()[3] = calendarDate.get(Calendar.MONTH);
+                presenter.getTask().getTaskReminder()[4] = calendarDate.get(Calendar.YEAR);
                 new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        presenter.setDay(datePicker.getDayOfMonth());
-                        presenter.setMonth(datePicker.getMonth());
-                        presenter.setYear(datePicker.getYear());
-                        taskDate.setText(presenter.getDay() + "/" + presenter.getMonth() + "/" + presenter.getYear());
+                        calendarDate.set(i, i1, i2);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        taskDate.setText(simpleDateFormat.format(calendarDate.getTime()));
                     }
-                },2018, 8, 2 ).show();
+                }, presenter.getTask().getTaskReminder()[4], presenter.getTask().getTaskReminder()[3], presenter.getTask().getTaskReminder()[2]).show();
             }
         });
 
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
+                try {
+                    int priority = 0;
+                    if (greenButton.isChecked()) priority = 1;
+                    if (yellowButton.isChecked()) priority = 2;
+                    if (redButton.isChecked()) priority = 3;
 
-                int priority = 0;
-                if (greenButton.isChecked()) priority = 1;
-                if (yellowButton.isChecked()) priority = 2;
-                if (redButton.isChecked()) priority = 3;
+                    Task task = new Task.Builder()
+                            .setTaskName(taskName.getText().toString())
+                            .setTaskContent(taskContent.getText().toString())
+                            .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
+                            .setTaskPriority(priority)
+                            .setTaskDoneState(0)
+                            .builder();
 
-                Date date = new Date();
-                date.setHours(presenter.getHour());
-                date.setMinutes(presenter.getMinute());
-                date.setDate(presenter.getDay());
-                date.setMonth(presenter.getMonth());
-                date.setYear(presenter.getYear());
-
-                Log.i("Date", (date.getTime() - System.currentTimeMillis())/86400000 + "");
-
-                Task task = new Task.Builder()
-                        .setTaskName(taskName.getText().toString())
-                        .setTaskContent(taskContent.getText().toString())
-                        .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
-                        .setTaskPriority(priority)
-                        .setTaskDoneState(0)
-                        .setTaskReminder(date.getTime())
-                        .builder();
-
-                presenter.addTask(task);
-
-                finish();
+                    presenter.addTask(task);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -136,8 +138,8 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         taskName.setText(task.getTaskName());
         taskContent.setText(task.getTaskContent());
         taskEstimateTime.setText(task.getEstimateTime());
-        taskTime.setText(task.getRemindTime());
-        taskDate.setText(task.getRemindDate());
+        taskTime.setText(task.getTaskReminder()[0] + ":" + task.getTaskReminder()[1]);
+        taskDate.setText(task.getTaskReminder()[2] + "/" + task.getTaskReminder()[3] + "/" + task.getTaskReminder()[4]);
         switch (task.getTaskPriority()) {
             case 1:
                 greenButton.setChecked(true);
@@ -150,4 +152,10 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                 break;
         }
     }
+
+    @Override
+    public void exitActivity() {
+        finish();
+    }
+
 }

@@ -1,14 +1,16 @@
 package com.umbala.cuongbv.todo.ui.edit;
 
-import com.umbala.cuongbv.todo.data.TaskRepo;
+
 import com.umbala.cuongbv.todo.data.TaskRepository;
 import com.umbala.cuongbv.todo.model.Task;
 
-import java.util.List;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class Presenter implements EditContractor.Presenter {
 
-    private int hour, minute, day, month, year;
 
     private EditContractor.View view;
     private TaskRepository taskRepository;
@@ -34,51 +36,58 @@ public class Presenter implements EditContractor.Presenter {
     @Override
     public void addTask(Task task) {
         if (this.task == null) {
-            taskRepository.addTask(task);
+            taskRepository.addTask(task)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Object o) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.exitActivity();
+                        }
+                    });
         }
         else {
             task.setTaskID(this.task.getTaskID());
-            taskRepository.updateTask(task);
+            taskRepository.updateTask(task)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Object o) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.exitActivity();
+                        }
+                    });
         }
     }
 
-    public int getHour() {
-        return hour;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
 }

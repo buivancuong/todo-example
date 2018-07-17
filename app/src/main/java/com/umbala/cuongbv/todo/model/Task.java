@@ -1,7 +1,9 @@
 package com.umbala.cuongbv.todo.model;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,8 +33,9 @@ public class Task implements Comparable<Task>,Parcelable {
     private int taskPriority;
     @ColumnInfo(name = "task_estimate_time")
     private double taskEstimateTime;
-    @ColumnInfo(name = "task_reminder")
-    private long taskReminder;
+    @Ignore
+            //(name = "task_reminder")
+    private int[] taskReminder = {0, 0, 0, 0, 0};       // hour, minute, day, month, year
     @ColumnInfo(name = "task_done_state")
     private int taskDoneState;
     @NonNull
@@ -59,7 +62,7 @@ public class Task implements Comparable<Task>,Parcelable {
         taskContent = in.readString();
         taskPriority = in.readInt();
         taskEstimateTime = in.readDouble();
-        taskReminder = in.readLong();
+        in.readIntArray(taskReminder);
         taskDoneState = in.readInt();
         taskID = in.readString();
     }
@@ -106,7 +109,7 @@ public class Task implements Comparable<Task>,Parcelable {
         parcel.writeString(taskContent);
         parcel.writeInt(taskPriority);
         parcel.writeDouble(taskEstimateTime);
-        parcel.writeLong(taskReminder);
+        parcel.writeIntArray(taskReminder);
         parcel.writeInt(taskDoneState);
         parcel.writeString(taskID);
     }
@@ -117,7 +120,7 @@ public class Task implements Comparable<Task>,Parcelable {
         private String taskContent = "";
         private int taskPriority = 3;
         private double taskEstimateTime = 0;
-        private long taskReminder = 0; // ms
+        private int[] taskReminder = {0, 0, 1, 1, 1970}; //
         private int taskDoneState = 0;
 
         public Builder setTaskName(String name) {
@@ -140,7 +143,7 @@ public class Task implements Comparable<Task>,Parcelable {
             return this;
         }
 
-        public Builder setTaskReminder(long reminder) {
+        public Builder setTaskReminder(int[] reminder) {
             taskReminder = reminder;
             return this;
         }
@@ -171,7 +174,7 @@ public class Task implements Comparable<Task>,Parcelable {
         return taskEstimateTime;
     }
 
-    public long getTaskReminder() {
+    public int[] getTaskReminder() {
         return taskReminder;
     }
 
@@ -191,18 +194,8 @@ public class Task implements Comparable<Task>,Parcelable {
         return taskEstimateTime/(60 * 60 * 1000) + "";
     }
 
-    public String getRemindDate() {
-       return getStringPattern("dd/MM/yyyy");
-    }
-
-    public String getRemindTime() {
-        return getStringPattern("HH/mm/ss");
-    }
-
-    private String getStringPattern(String string) {
-        Date date = new Date(taskReminder);
-        DateFormat dateFormat = new SimpleDateFormat(string, Locale.US);
-        return dateFormat.format(date);
+    public void setTaskReminder(int[] taskReminder) {
+        this.taskReminder = taskReminder;
     }
 
     public void setTaskName(String taskName) {
@@ -221,7 +214,4 @@ public class Task implements Comparable<Task>,Parcelable {
         this.taskEstimateTime = taskEstimateTime;
     }
 
-    public void setTaskReminder(long taskReminder) {
-        this.taskReminder = taskReminder;
-    }
 }

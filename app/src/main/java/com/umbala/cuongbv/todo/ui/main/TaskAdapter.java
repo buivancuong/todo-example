@@ -93,7 +93,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
      */
     @Override
     public int getItemCount() {
-        return tasks.size();
+        return tasks != null ? tasks.size(): 0;
     }
 
     /**
@@ -130,7 +130,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public void bindTask(final Task task) {
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
-            reminder.setText(task.getRemindDate());
+            reminder.setText(task.getTaskReminder()[0] + ":"
+                    + task.getTaskReminder()[1] + " - "
+                    + task.getTaskReminder()[2] + "/"
+                    + task.getTaskReminder()[3] + "/"
+                    + task.getTaskReminder()[4]);
 
             taskItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
