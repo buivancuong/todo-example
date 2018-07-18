@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Loading");
-/*
+
         taskAdapter = new TaskAdapter();
         taskAdapter.setClickListener(this);
         recyclerView.setAdapter(taskAdapter);
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
         presenter = new Presenter(TaskRepo.getInstance(this), this);
         presenter.getTaskList();
-*/
+
         findViewById(R.id.addTask).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

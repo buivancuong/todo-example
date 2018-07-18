@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.umbala.cuongbv.todo.model.Task;
 
-import java.util.List;
-
 public interface EditContractor {
 
     interface View{

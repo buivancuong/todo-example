@@ -130,11 +130,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public void bindTask(final Task task) {
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
-            reminder.setText(task.getTaskReminder()[0] + ":"
-                    + task.getTaskReminder()[1] + " - "
-                    + task.getTaskReminder()[2] + "/"
-                    + task.getTaskReminder()[3] + "/"
-                    + task.getTaskReminder()[4]);
+            reminder.setText(task.getTaskHour() + ":" + task.getTaskMinute() + " - "
+                    + task.getTaskDay() + "/" + task.getTaskMonth() + "/" + task.getTaskYear());
 
             taskItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

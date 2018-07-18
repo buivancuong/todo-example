@@ -4,26 +4,22 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.umbala.cuongbv.todo.R;
 import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
-import com.umbala.cuongbv.todo.ui.main.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class EditActivity extends AppCompatActivity implements EditContractor.View {
 
@@ -74,7 +70,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                 new TimePickerDialog(EditActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                         calendarTime.set(1995, 8, 2, i, i1);
                         taskTime.setText(simpleDateFormat.format(calendarTime.getTime()));
                     }
@@ -88,9 +84,9 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
             @Override
             public void onClick(View view) {
                 final Calendar calendarDate = Calendar.getInstance();
-                presenter.getTask().getTaskReminder()[2] = calendarDate.get(Calendar.DATE);
-                presenter.getTask().getTaskReminder()[3] = calendarDate.get(Calendar.MONTH);
-                presenter.getTask().getTaskReminder()[4] = calendarDate.get(Calendar.YEAR);
+                int day = calendarDate.get(Calendar.DATE);
+                int month = calendarDate.get(Calendar.MONTH);
+                int year = calendarDate.get(Calendar.YEAR);
                 new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -98,7 +94,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                         taskDate.setText(simpleDateFormat.format(calendarDate.getTime()));
                     }
-                }, presenter.getTask().getTaskReminder()[4], presenter.getTask().getTaskReminder()[3], presenter.getTask().getTaskReminder()[2]).show();
+                }, day, month, year).show();
             }
         });
 
@@ -119,6 +115,11 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                             .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
                             .setTaskPriority(priority)
                             .setTaskDoneState(0)
+                            .setTaskHour(new SimpleDateFormat("HH:mm").parse(taskTime.getText().toString()).getHours())
+                            .setTaskMinute(new SimpleDateFormat("HH:mm").parse(taskTime.getText().toString()).getMinutes())
+                            .setTaskDay(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getDay())
+                            .setTaskMonth(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getMonth())
+                            .setTaskYear(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getYear())
                             .builder();
 
                     presenter.addTask(task);
@@ -138,8 +139,8 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         taskName.setText(task.getTaskName());
         taskContent.setText(task.getTaskContent());
         taskEstimateTime.setText(task.getEstimateTime());
-        taskTime.setText(task.getTaskReminder()[0] + ":" + task.getTaskReminder()[1]);
-        taskDate.setText(task.getTaskReminder()[2] + "/" + task.getTaskReminder()[3] + "/" + task.getTaskReminder()[4]);
+        taskTime.setText(task.getTaskHour() + ":" + task.getTaskMinute());
+        taskDate.setText(task.getTaskDay() + "/" + task.getTaskMonth() + "/" + task.getTaskYear());
         switch (task.getTaskPriority()) {
             case 1:
                 greenButton.setChecked(true);

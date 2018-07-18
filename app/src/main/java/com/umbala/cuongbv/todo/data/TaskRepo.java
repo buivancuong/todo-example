@@ -1,11 +1,9 @@
 package com.umbala.cuongbv.todo.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.umbala.cuongbv.todo.model.Task;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
