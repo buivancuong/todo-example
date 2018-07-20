@@ -26,10 +26,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="test" />
+                <action android:name="pause" />
+                <action android:name="play"/>
+                <action android:name="dismiss" />
+                <action android:name="Stop"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".ui.edit.Music" />
+        <service android:name=".ui.edit.AlarmService" />
 
     </application>
 

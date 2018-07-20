@@ -11,16 +11,16 @@ import com.umbala.cuongbv.todo.R;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-//
-//        Intent myIntent = new Intent(context, Music.class);
-//        context.startService(myIntent);
 
+        String action = intent.getAction();
+        if (action != null && action.equals("Stop")) {
+            context.stopService(new Intent(context, AlarmService.class));
+        } else {
+            MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.reminder);
+            mediaPlayer.start();
+        }
 
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.reminder);
-        mediaPlayer.start();
-
-        Log.i("receiver", "received");
+        Log.i("receiver", "received " + action);
 
     }
 }
