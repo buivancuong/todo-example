@@ -22,7 +22,7 @@ public class Music extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.reminder);
-        mediaPlayer.start();
+//        mediaPlayer.start();
 
         return START_STICKY;
     }
