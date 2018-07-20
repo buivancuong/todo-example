@@ -63,6 +63,23 @@ public class TaskRepo implements TaskRepository {
     }
 
     @Override
+    public Observable<Double> getTotalTime() {
+        return new Observable<Double>() {
+            @Override
+            protected void subscribeActual(Observer<? super Double> observer) {
+                List<Task> tasks = database.taskDAO().getAllTask();
+                double totalEstimateTime = 0;
+                for (int i = 0; i < tasks.size(); i++){
+                    if (tasks.get(i).getTaskDoneState() == 0) {
+                        totalEstimateTime += tasks.get(i).getTaskEstimateTime();
+                    }
+                }
+                observer.onNext(totalEstimateTime);
+            }
+        };
+    }
+
+    @Override
     public Observable addTask(final Task task) {
         return new Observable() {
             @Override

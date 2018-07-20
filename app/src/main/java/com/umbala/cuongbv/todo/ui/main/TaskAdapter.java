@@ -1,5 +1,6 @@
 package com.umbala.cuongbv.todo.ui.main;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -127,11 +128,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
          *
          * @param task
          */
+        @SuppressLint("DefaultLocale")
         public void bindTask(final Task task) {
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
-            reminder.setText(task.getTaskHour() + ":" + task.getTaskMinute() + " - "
-                    + task.getTaskDay() + "/" + task.getTaskMonth() + "/" + task.getTaskYear());
+            reminder.setText(String.format("%d:%d - %d/%d/%d", task.getTaskHour(), task.getTaskMinute(), task.getTaskDay(), task.getTaskMonth(), task.getTaskYear()));
 
             taskItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

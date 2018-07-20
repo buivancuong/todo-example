@@ -1,6 +1,8 @@
 package com.umbala.cuongbv.todo.ui.edit;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.widget.TimePicker;
 import com.umbala.cuongbv.todo.R;
 import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
+import com.umbala.cuongbv.todo.ui.main.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,8 +38,6 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         intent.putExtra(TASK, task);
         return intent;
     }
-
-    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                         calendarTime.set(1995, 8, 2, i, i1);
+                        presenter.setHour(i);
+                        presenter.setMinute(i1);
                         taskTime.setText(simpleDateFormat.format(calendarTime.getTime()));
                     }
                 }, 0, 0, true).show();
@@ -84,23 +87,28 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
             @Override
             public void onClick(View view) {
                 final Calendar calendarDate = Calendar.getInstance();
-                int day = calendarDate.get(Calendar.DATE);
-                int month = calendarDate.get(Calendar.MONTH);
-                int year = calendarDate.get(Calendar.YEAR);
                 new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        calendarDate.set(i, i1, i2);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        calendarDate.set(i, i1, i2);
+                        presenter.setYear(i);
+                        presenter.setMonth(i1 + 1);
+                        presenter.setDay(i2);
                         taskDate.setText(simpleDateFormat.format(calendarDate.getTime()));
                     }
-                }, day, month, year).show();
+                }, calendarDate.get(Calendar.YEAR), calendarDate.get(Calendar.MONTH), calendarDate.get(Calendar.DATE)).show();
             }
         });
 
-        okButton.setOnClickListener(new View.OnClickListener()
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(MainActivity.getStartIntent(EditActivity.this));
+            }
+        });
 
-        {
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -108,21 +116,50 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                     if (greenButton.isChecked()) priority = 1;
                     if (yellowButton.isChecked()) priority = 2;
                     if (redButton.isChecked()) priority = 3;
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    Intent intent = new Intent(EditActivity.this, AlarmReceiver.class);
 
-                    Task task = new Task.Builder()
-                            .setTaskName(taskName.getText().toString())
-                            .setTaskContent(taskContent.getText().toString())
-                            .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
-                            .setTaskPriority(priority)
-                            .setTaskDoneState(0)
-                            .setTaskHour(new SimpleDateFormat("HH:mm").parse(taskTime.getText().toString()).getHours())
-                            .setTaskMinute(new SimpleDateFormat("HH:mm").parse(taskTime.getText().toString()).getMinutes())
-                            .setTaskDay(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getDay())
-                            .setTaskMonth(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getMonth())
-                            .setTaskYear(new SimpleDateFormat("dd/MM/yyyy").parse(taskDate.getText().toString()).getYear())
-                            .builder();
+                    if (presenter.getTask() == null) {
+                        Task task = new Task.Builder()
+                                .setTaskName(taskName.getText().toString())
+                                .setTaskContent(taskContent.getText().toString())
+                                .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
+                                .setTaskPriority(priority)
+                                .setTaskDoneState(0)
+                                .setTaskHour(presenter.getHour())
+                                .setTaskMinute(presenter.getMinute())
+                                .setTaskDay(presenter.getDay())
+                                .setTaskMonth(presenter.getMonth())
+                                .setTaskYear(presenter.getYear())
+                                .builder();
+                        presenter.addTask(task);
 
-                    presenter.addTask(task);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+                    } else {
+                        presenter.getTask().setTaskName(taskName.getText().toString());
+                        presenter.getTask().setTaskContent(taskContent.getText().toString());
+                        presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
+                        presenter.getTask().setTaskPriority(priority);
+                        presenter.getTask().setTaskDoneState(0);
+                        if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
+                        if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
+                        if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
+                        if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
+                        if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
+                        presenter.addTask(presenter.getTask());
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+                    }
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,7 +175,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
     public void showEditTask(@NonNull Task task) {
         taskName.setText(task.getTaskName());
         taskContent.setText(task.getTaskContent());
-        taskEstimateTime.setText(task.getEstimateTime());
+        taskEstimateTime.setText(task.getEstimateTime().toString());
         taskTime.setText(task.getTaskHour() + ":" + task.getTaskMinute());
         taskDate.setText(task.getTaskDay() + "/" + task.getTaskMonth() + "/" + task.getTaskYear());
         switch (task.getTaskPriority()) {

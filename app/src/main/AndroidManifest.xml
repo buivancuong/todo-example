@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.umbala.cuongbv.todo">
 
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.edit.EditActivity"></activity>
+        <activity android:name=".ui.edit.EditActivity" />
+
+        <receiver android:name=".ui.edit.AlarmReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="test" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".ui.edit.Music"
+            android:enabled="true"/>
     </application>
 
 </manifest>

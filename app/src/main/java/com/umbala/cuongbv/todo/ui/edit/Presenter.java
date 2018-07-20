@@ -11,7 +11,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class Presenter implements EditContractor.Presenter {
 
-
+    private int hour, minute, day, month, year;
+//    private float estimateTime;
     private EditContractor.View view;
     private TaskRepository taskRepository;
 
@@ -22,6 +23,62 @@ public class Presenter implements EditContractor.Presenter {
         this.taskRepository = taskRepository;
     }
 
+/*    public float getEstimateTime() {
+        return estimateTime;
+    }
+
+    public void setEstimateTime(float estimateTime) {
+        this.estimateTime = estimateTime;
+    }*/
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public EditContractor.View getView() {
+        return view;
+    }
+
+    public void setView(EditContractor.View view) {
+        this.view = view;
+    }
+
     public Task getTask() {
         return task;
     }
@@ -29,6 +86,7 @@ public class Presenter implements EditContractor.Presenter {
     public void setTask(Task task) {
         if (task != null) {
             view.showEditTask(task);
+
         }
         this.task = task;
     }

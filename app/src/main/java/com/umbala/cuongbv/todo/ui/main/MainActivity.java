@@ -1,9 +1,13 @@
 package com.umbala.cuongbv.todo.ui.main;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
                 startActivityForResult(EditActivity.getStartIntent(MainActivity.this, null), 1); // 1: add task
             }
         });
-
     }
 
     @Override
@@ -86,9 +89,13 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
     @Override
     public void showTaskList(List<Task> tasks) {
-        Log.i("Main",tasks.size() +"");
         taskAdapter.setTasks(tasks);
 
+    }
+
+    @Override
+    public void showEstimateTime(double t) {
+        textViewEstimateTime.setText(String.format("Total Estimated Time: %s hours", t));
     }
 
     @Override
@@ -115,6 +122,6 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
     @Override
     public void onDoneStateChanged(Task task) {
-            presenter.updateTask(task);
+        presenter.updateTask(task);
     }
 }

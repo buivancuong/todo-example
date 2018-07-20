@@ -20,6 +20,19 @@ public class Presenter implements MainContractor.Presenter {
 
     private TaskRepository taskRepository;
     private MainContractor.View view;
+    private double estimateTime = 0;
+
+    public TaskRepository getTaskRepository() {
+        return taskRepository;
+    }
+
+    public double getEstimateTime() {
+        return estimateTime;
+    }
+
+    public void setEstimateTime(double estimateTime) {
+        this.estimateTime = estimateTime;
+    }
 
     /**
      * phương thức này sẽ phụ trách việc lấy danh sách task từ {@link TaskRepository}
@@ -48,6 +61,7 @@ public class Presenter implements MainContractor.Presenter {
                     @Override
                     public void onNext(List<Task> tasks) {
                         view.showTaskList(tasks);
+                        getTotalEstimateTime();
                         view.hideLoading();
                     }
 
@@ -63,6 +77,34 @@ public class Presenter implements MainContractor.Presenter {
                 });
 
     }
+
+    @Override
+    public void getTotalEstimateTime() {
+        taskRepository.getTotalTime().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Double>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Double aDouble) {
+                        view.showEstimateTime(aDouble);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 
     @Override
     public void delTask(String id) {

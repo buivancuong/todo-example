@@ -35,6 +35,7 @@ public interface MainContractor {
 
         void showTaskList(List<Task> tasks);
 
+        void showEstimateTime(double totalEstimateTime);
     }
 
     /**
@@ -62,6 +63,8 @@ public interface MainContractor {
     interface Presenter{
 
         void getTaskList();
+
+        void getTotalEstimateTime();
 
         void delTask(String id);
 

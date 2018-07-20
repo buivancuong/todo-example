@@ -243,7 +243,7 @@ public class Task implements Comparable<Task>,Parcelable {
     }
 
     public String getEstimateTime() {
-        return taskEstimateTime/(60 * 60 * 1000) + "";
+        return taskEstimateTime + "";
     }
 
     public void setTaskHour(int taskHour) {

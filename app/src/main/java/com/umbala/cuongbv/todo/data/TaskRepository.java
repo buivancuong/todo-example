@@ -32,6 +32,8 @@ public interface TaskRepository {
      */
     Observable<Task> getTask(String id);
 
+    Observable<Double> getTotalTime();
+
     Observable addTask(Task task);
 
     Observable delTask(String id);
