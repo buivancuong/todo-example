@@ -20,15 +20,17 @@
         </activity>
         <activity android:name=".ui.edit.EditActivity" />
 
-        <receiver android:name=".ui.edit.AlarmReceiver"
-            android:exported="true"
-            android:enabled="true">
+        <receiver
+            android:name=".ui.edit.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="test" />
             </intent-filter>
         </receiver>
-        <service android:name=".ui.edit.Music"
-            android:enabled="true"/>
+
+        <service android:name=".ui.edit.Music" />
+
     </application>
 
 </manifest>

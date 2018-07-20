@@ -93,7 +93,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                         calendarDate.set(i, i1, i2);
                         presenter.setYear(i);
-                        presenter.setMonth(i1 + 1);
+                        presenter.setMonth(i1);
                         presenter.setDay(i2);
                         taskDate.setText(simpleDateFormat.format(calendarDate.getTime()));
                     }
@@ -112,54 +112,61 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
             @Override
             public void onClick(View view) {
                 try {
-                    int priority = 0;
-                    if (greenButton.isChecked()) priority = 1;
-                    if (yellowButton.isChecked()) priority = 2;
-                    if (redButton.isChecked()) priority = 3;
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    Intent intent = new Intent(EditActivity.this, AlarmReceiver.class);
+//                    int priority = 0;
+//                    if (greenButton.isChecked()) priority = 1;
+//                    if (yellowButton.isChecked()) priority = 2;
+//                    if (redButton.isChecked()) priority = 3;
+//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                    Intent intent = new Intent(EditActivity.this, AlarmReceiver.class);
+//
+//                    if (presenter.getTask() == null) {
+//                        Task task = new Task.Builder()
+//                                .setTaskName(taskName.getText().toString())
+//                                .setTaskContent(taskContent.getText().toString())
+//                                .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
+//                                .setTaskPriority(priority)
+//                                .setTaskDoneState(0)
+//                                .setTaskHour(presenter.getHour())
+//                                .setTaskMinute(presenter.getMinute())
+//                                .setTaskDay(presenter.getDay())
+//                                .setTaskMonth(presenter.getMonth())
+//                                .setTaskYear(presenter.getYear())
+//                                .builder();
+//                        presenter.addTask(task);
+//
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+//
+//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//
+//                    } else {
+//                        presenter.getTask().setTaskName(taskName.getText().toString());
+//                        presenter.getTask().setTaskContent(taskContent.getText().toString());
+//                        presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
+//                        presenter.getTask().setTaskPriority(priority);
+//                        presenter.getTask().setTaskDoneState(0);
+//                        if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
+//                        if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
+//                        if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
+//                        if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
+//                        if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
+//                        presenter.addTask(presenter.getTask());
+//
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+//
+//
+//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//
+//
+//                    }
+//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-                    if (presenter.getTask() == null) {
-                        Task task = new Task.Builder()
-                                .setTaskName(taskName.getText().toString())
-                                .setTaskContent(taskContent.getText().toString())
-                                .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
-                                .setTaskPriority(priority)
-                                .setTaskDoneState(0)
-                                .setTaskHour(presenter.getHour())
-                                .setTaskMinute(presenter.getMinute())
-                                .setTaskDay(presenter.getDay())
-                                .setTaskMonth(presenter.getMonth())
-                                .setTaskYear(presenter.getYear())
-                                .builder();
-                        presenter.addTask(task);
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
-
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-                    } else {
-                        presenter.getTask().setTaskName(taskName.getText().toString());
-                        presenter.getTask().setTaskContent(taskContent.getText().toString());
-                        presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
-                        presenter.getTask().setTaskPriority(priority);
-                        presenter.getTask().setTaskDoneState(0);
-                        if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
-                        if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
-                        if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
-                        if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
-                        if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
-                        presenter.addTask(presenter.getTask());
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
-
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(EditActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-                    }
+                    Intent intent1 = new Intent(EditActivity.this, Music.class);
+                    startService(intent1);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
