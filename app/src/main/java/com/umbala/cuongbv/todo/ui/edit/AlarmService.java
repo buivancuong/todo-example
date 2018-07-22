@@ -29,24 +29,6 @@ public class AlarmService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        Intent i2 = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, i2, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
-        Log.i("service","alarm was set");
-
-        final Handler handler = new Handler();
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-
-                Log.i("service", "fuck");
-                handler.postDelayed(this, 1000);
-            }
-        });
-
     }
 
     @Override
@@ -57,12 +39,22 @@ public class AlarmService extends Service {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentText("Reminder")
                 .setOngoing(true)
+                .setContentText("Turn of this Alarm?")
                 .setContentIntent(PendingIntent.getBroadcast(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .build();
         reminder = intent.getLongExtra("Reminder",0);
-        Log.i("Reminder", String.valueOf(reminder));
+        Log.i("Reminder", String.valueOf(reminder - System.currentTimeMillis()));
 
         startForeground(1, notification);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent i2 = new Intent(this, AlarmReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, i2, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, reminder, pendingIntent);
+        Log.i("service","alarm was set");
+
 
         return START_STICKY;
     }

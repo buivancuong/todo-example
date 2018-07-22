@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -93,7 +94,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                         calendarDate.set(i, i1, i2);
                         presenter.setYear(i);
-                        presenter.setMonth(i1 + 1);
+                        presenter.setMonth(i1);
                         presenter.setDay(i2);
                         taskDate.setText(simpleDateFormat.format(calendarDate.getTime()));
                     }
@@ -131,9 +132,26 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                                 .setTaskMonth(presenter.getMonth())
                                 .setTaskYear(presenter.getYear())
                                 .builder();
-                        presenter.addTask(task);
 
-                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+                        calendar.set(presenter.getYear(),
+                                presenter.getMonth(),
+                                presenter.getDay(),
+                                presenter.getHour(),
+                                presenter.getMinute(),
+                                0);
+
+
+//                    Log.i("Year", presenter.getYear() + "");
+//                    Log.i("Month", presenter.getMonth() + "");
+//                    Log.i("Day", presenter.getDay() + "");
+//                    Log.i("Hour", presenter.getHour() + "");
+//                    Log.i("Minute", presenter.getMinute() + "");
+
+                        Intent intent1 = new Intent(EditActivity.this, AlarmService.class);
+                        intent1.putExtra("Reminder", calendar.getTimeInMillis());
+                        startService(intent1);
+
+                        presenter.addTask(task);
 
                     } else {
                         presenter.getTask().setTaskName(taskName.getText().toString());
@@ -146,15 +164,29 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
                         if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
                         if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
-                        presenter.addTask(presenter.getTask());
 
-                        calendar.set(presenter.getYear(), presenter.getMonth(), presenter.getDay(), presenter.getHour(), presenter.getMinute());
+                        calendar.set(presenter.getTask().getTaskYear(),
+                                presenter.getTask().getTaskMonth(),
+                                presenter.getTask().getTaskDay(),
+                                presenter.getTask().getTaskHour(),
+                                presenter.getTask().getTaskMinute(),
+                                0);
+
+
+//                    Log.i("Year", presenter.getYear() + "");
+//                    Log.i("Month", presenter.getMonth() + "");
+//                    Log.i("Day", presenter.getDay() + "");
+//                    Log.i("Hour", presenter.getHour() + "");
+//                    Log.i("Minute", presenter.getMinute() + "");
+
+                        Intent intent1 = new Intent(EditActivity.this, AlarmService.class);
+                        intent1.putExtra("Reminder", calendar.getTimeInMillis());
+                        startService(intent1);
+
+                        presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
 
                     }
 
-                    Intent intent1 = new Intent(EditActivity.this, AlarmService.class);
-                    intent1.putExtra("Reminder", calendar.getTimeInMillis());
-                    startService(intent1);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -172,7 +204,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         taskContent.setText(task.getTaskContent());
         taskEstimateTime.setText(task.getEstimateTime().toString());
         taskTime.setText(task.getTaskHour() + ":" + task.getTaskMinute());
-        taskDate.setText(task.getTaskDay() + "/" + task.getTaskMonth() + "/" + task.getTaskYear());
+        taskDate.setText(task.getTaskDay() + "/" + (task.getTaskMonth() + 1) + "/" + task.getTaskYear());
         switch (task.getTaskPriority()) {
             case 1:
                 greenButton.setChecked(true);

@@ -32,7 +32,7 @@
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:orientation="horizontal"
@@ -43,21 +43,21 @@
         <RadioButton
             android:id="@+id/radioButtonGreen"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@drawable/green_warning" />
 
         <RadioButton
             android:id="@+id/radioButtonYellow"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@drawable/yellow_warning" />
 
         <RadioButton
             android:id="@+id/radioButtonRed"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@drawable/red_waring" />
     </RadioGroup>

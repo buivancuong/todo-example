@@ -9,14 +9,18 @@ import android.util.Log;
 import com.umbala.cuongbv.todo.R;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    static MediaPlayer mediaPlayer;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
         String action = intent.getAction();
-        if (action != null && action.equals("Stop")) {
+        if (action != null && action.equals("Stop") && mediaPlayer != null) {
             context.stopService(new Intent(context, AlarmService.class));
+            mediaPlayer.stop();
         } else {
-            MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.reminder);
+            mediaPlayer = MediaPlayer.create(context, R.raw.reminder);
             mediaPlayer.start();
         }
 
