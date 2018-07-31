@@ -66,7 +66,7 @@ public interface MainContractor {
 
         void getTotalEstimateTime();
 
-        void delTask(String id);
+        void delTask(int id);
 
         void updateTask(Task task);
 

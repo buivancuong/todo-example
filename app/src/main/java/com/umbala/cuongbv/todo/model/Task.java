@@ -39,9 +39,9 @@ public class Task implements Comparable<Task>,Parcelable {
     @ColumnInfo(name = "task_done_state")
     private int taskDoneState;
     @NonNull
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
-    private String taskID;
+    private int taskID;
 
     public Task(){
 
@@ -58,7 +58,6 @@ public class Task implements Comparable<Task>,Parcelable {
         this.taskMonth = builder.taskMonth;
         this.taskYear = builder.taskYear;
         this.taskDoneState = builder.taskDoneState;
-        this.taskID = UUID.randomUUID().toString();
     }
 
     protected Task(Parcel in) {
@@ -72,7 +71,7 @@ public class Task implements Comparable<Task>,Parcelable {
         taskMonth = in.readInt();
         taskYear = in.readInt();
         taskDoneState = in.readInt();
-        taskID = in.readString();
+        taskID = in.readInt();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -87,7 +86,7 @@ public class Task implements Comparable<Task>,Parcelable {
         }
     };
 
-    public void setTaskID(String taskID) {
+    public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
 
@@ -123,7 +122,7 @@ public class Task implements Comparable<Task>,Parcelable {
         parcel.writeInt(taskMonth);
         parcel.writeInt(taskYear);
         parcel.writeInt(taskDoneState);
-        parcel.writeString(taskID);
+        parcel.writeInt(taskID);
     }
 
     public static class Builder {
@@ -238,7 +237,7 @@ public class Task implements Comparable<Task>,Parcelable {
         this.taskDoneState = taskDoneState;
     }
 
-    public String getTaskID() {
+    public int getTaskID() {
         return taskID;
     }
 

@@ -24,6 +24,7 @@ import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
 import com.umbala.cuongbv.todo.ui.edit.EditActivity;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
         presenter = new Presenter(TaskRepo.getInstance(this), this);
         presenter.getTaskList();
+
+        Intent nullIntent = new Intent(MainActivity.this, AlarmService.class);
+        startService(nullIntent);
 
         findViewById(R.id.addTask).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,5 +127,27 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
     @Override
     public void onDoneStateChanged(Task task) {
         presenter.updateTask(task);
+    }
+
+    @Override
+    public void onTurnOnReminder(Task task) {
+        Intent onReminderIntent = new Intent(MainActivity.this, AlarmService.class);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(task.getTaskYear(), task.getTaskMonth(), task.getTaskDay(), task.getTaskHour(), task.getTaskMinute());
+
+        onReminderIntent.putExtra("Task Content", task.getTaskContent());
+        onReminderIntent.putExtra("Task Name", task.getTaskName());
+        onReminderIntent.putExtra("Task ID", task.getTaskID());
+        onReminderIntent.putExtra("Task Reminder", calendar.getTimeInMillis());
+
+        startActivity(onReminderIntent);
+    }
+
+    @Override
+    public void onTurnOffReminder(Task task) {
+        Intent offReminderIntent = new Intent(MainActivity.this, AlarmService.class);
+        offReminderIntent.putExtra("Task ID", task.getTaskID());
+        offReminderIntent.putExtra("Turn Off", false);
+        startActivity(offReminderIntent);
     }
 }

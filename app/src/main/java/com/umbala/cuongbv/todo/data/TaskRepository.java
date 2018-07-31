@@ -36,7 +36,7 @@ public interface TaskRepository {
 
     Observable addTask(Task task);
 
-    Observable delTask(String id);
+    Observable delTask(int id);
 
     Observable updateTask(Task task);
 

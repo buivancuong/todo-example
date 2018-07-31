@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.umbala.cuongbv.todo.R;
@@ -110,6 +112,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         ImageView imageView;
         CheckBox checkBox;
         ConstraintLayout taskItem;
+        Switch switchReminder;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,6 +123,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             imageView = itemView.findViewById(R.id.imageView);
             checkBox = itemView.findViewById(R.id.checkBox);
             taskItem = itemView.findViewById(R.id.taskItem);
+            switchReminder = itemView.findViewById(R.id.switchReminder);
+            switchReminder.setTextOn("ON");
+            switchReminder.setTextOff("OFF");
 
         }
 
@@ -166,6 +172,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 }
             });
 
+            switchReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (clickListener != null) {
+                        if (b) {
+                            clickListener.onTurnOnReminder(task);
+                        } else {
+                            clickListener.onTurnOffReminder(task);
+                        }
+                    }
+                }
+            });
+
             switch (task.getTaskPriority()){
                 case 1:
                     imageView.setImageResource(R.drawable.green_warning);
@@ -189,5 +208,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onItemClicked(Task task);
         void onItemLongClick(Task task);
         void onDoneStateChanged(Task task);
+        void onTurnOnReminder(Task task);
+        void onTurnOffReminder(Task task);
     }
 }

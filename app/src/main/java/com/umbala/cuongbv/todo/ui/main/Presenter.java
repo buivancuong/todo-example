@@ -107,7 +107,7 @@ public class Presenter implements MainContractor.Presenter {
 
 
     @Override
-    public void delTask(String id) {
+    public void delTask(int id) {
         taskRepository.delTask(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -91,7 +91,7 @@ public class TaskRepo implements TaskRepository {
     }
 
     @Override
-    public Observable delTask(final String id) {
+    public Observable delTask(final int id) {
         return new Observable() {
             @Override
             protected void subscribeActual(Observer observer) {

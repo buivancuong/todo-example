@@ -27,7 +27,7 @@ public interface TaskDAO {
     void addTask(Task task);
 
     @Query("DELETE FROM task WHERE task_id = :id")
-    void delTask(String id);
+    void delTask(int id);
 
     @Update
     void updateTask(Task task);

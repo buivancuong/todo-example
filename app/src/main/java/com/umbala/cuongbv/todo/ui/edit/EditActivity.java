@@ -1,15 +1,12 @@
 package com.umbala.cuongbv.todo.ui.edit;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,6 +17,7 @@ import android.widget.TimePicker;
 import com.umbala.cuongbv.todo.R;
 import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
+import com.umbala.cuongbv.todo.ui.main.AlarmService;
 import com.umbala.cuongbv.todo.ui.main.MainActivity;
 
 import java.text.SimpleDateFormat;
@@ -78,7 +76,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         presenter.setMinute(i1);
                         taskTime.setText(simpleDateFormat.format(calendarTime.getTime()));
                     }
-                }, 0, 0, true).show();
+                }, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show();
             }
         });
 
@@ -147,10 +145,6 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
 //                    Log.i("Hour", presenter.getHour() + "");
 //                    Log.i("Minute", presenter.getMinute() + "");
 
-                        Intent intent1 = new Intent(EditActivity.this, AlarmService.class);
-                        intent1.putExtra("Reminder", calendar.getTimeInMillis());
-                        startService(intent1);
-
                         presenter.addTask(task);
 
                     } else {
@@ -178,10 +172,6 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
 //                    Log.i("Day", presenter.getDay() + "");
 //                    Log.i("Hour", presenter.getHour() + "");
 //                    Log.i("Minute", presenter.getMinute() + "");
-
-                        Intent intent1 = new Intent(EditActivity.this, AlarmService.class);
-                        intent1.putExtra("Reminder", calendar.getTimeInMillis());
-                        startService(intent1);
 
                         presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
 

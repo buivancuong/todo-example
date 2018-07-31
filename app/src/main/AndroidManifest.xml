@@ -21,7 +21,7 @@
         <activity android:name=".ui.edit.EditActivity" />
 
         <receiver
-            android:name=".ui.edit.AlarmReceiver"
+            android:name=".ui.main.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -33,7 +33,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".ui.edit.AlarmService" />
+        <service android:name=".ui.main.AlarmService" />
 
     </application>
 
