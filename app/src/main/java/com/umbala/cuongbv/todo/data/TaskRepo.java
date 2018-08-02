@@ -53,7 +53,7 @@ public class TaskRepo implements TaskRepository {
     }
 
     @Override
-    public Observable<Task> getTask(final String id) {
+    public Observable<Task> getTask(final int id) {
         return new Observable<Task>() {
             @Override
             protected void subscribeActual(Observer<? super Task> observer) {

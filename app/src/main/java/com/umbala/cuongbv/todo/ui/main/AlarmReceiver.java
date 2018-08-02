@@ -26,7 +26,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         if (action != null && action.equals("Stop") && mediaPlayer != null) {
-            context.stopService(new Intent(context, AlarmService.class));
+            context.stopService(new Intent(context, AlarmReceiver.class));
             mediaPlayer.stop();
         } else {
             mediaPlayer = MediaPlayer.create(context, R.raw.reminder);
@@ -39,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setContentText("Reminder")
                     .setOngoing(true)
                     .setContentText("Turn off this Alarm?")
-                    .setContentIntent(PendingIntent.getBroadcast(context, intent.getIntExtra("Task ID", 0), intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setContentIntent(PendingIntent.getBroadcast(context, intent.getIntExtra("Task ID", 0), stopIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                     .build();
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(intent.getIntExtra("Task ID", 0), notification);

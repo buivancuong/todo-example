@@ -48,7 +48,6 @@ public class Presenter implements MainContractor.Presenter {
      */
     @Override
     public void getTaskList() {
-        view.showLoading();
         taskRepository.getAllTask()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -62,7 +61,6 @@ public class Presenter implements MainContractor.Presenter {
                     public void onNext(List<Task> tasks) {
                         view.showTaskList(tasks);
                         getTotalEstimateTime();
-                        view.hideLoading();
                     }
 
                     @Override
@@ -161,7 +159,6 @@ public class Presenter implements MainContractor.Presenter {
                     }
                 });
     }
-
 
     public Presenter(TaskRepository taskRepository, MainContractor.View view) {
         this.taskRepository = taskRepository;

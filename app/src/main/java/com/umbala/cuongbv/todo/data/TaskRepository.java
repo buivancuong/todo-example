@@ -30,7 +30,7 @@ public interface TaskRepository {
      * @param id
      * @return
      */
-    Observable<Task> getTask(String id);
+    Observable<Task> getTask(int id);
 
     Observable<Double> getTotalTime();
 

@@ -82,19 +82,8 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
     }
 
     @Override
-    public void showLoading() {
-        mProgressDialog.show();
-    }
-
-    @Override
-    public void hideLoading() {
-        mProgressDialog.hide();
-    }
-
-    @Override
     public void showTaskList(List<Task> tasks) {
         taskAdapter.setTasks(tasks);
-
     }
 
     @Override
@@ -132,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
     @Override
     public void onTurnOnReminder(Task task) {
         Intent onReminderIntent = new Intent(MainActivity.this, AlarmService.class);
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(task.getTaskYear(), task.getTaskMonth(), task.getTaskDay(), task.getTaskHour(), task.getTaskMinute());
 
@@ -140,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         onReminderIntent.putExtra("Task ID", task.getTaskID());
         onReminderIntent.putExtra("Task Reminder", calendar.getTimeInMillis());
 
-        startActivity(onReminderIntent);
+        startService(onReminderIntent);
     }
 
     @Override
@@ -148,6 +138,6 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         Intent offReminderIntent = new Intent(MainActivity.this, AlarmService.class);
         offReminderIntent.putExtra("Task ID", task.getTaskID());
         offReminderIntent.putExtra("Turn Off", false);
-        startActivity(offReminderIntent);
+        startService(offReminderIntent);
     }
 }

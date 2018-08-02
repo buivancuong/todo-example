@@ -29,10 +29,6 @@ public interface MainContractor {
      */
     interface View {
 
-        void showLoading();
-
-        void hideLoading();
-
         void showTaskList(List<Task> tasks);
 
         void showEstimateTime(double totalEstimateTime);

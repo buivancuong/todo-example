@@ -124,6 +124,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                                 .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
                                 .setTaskPriority(priority)
                                 .setTaskDoneState(0)
+                                .setIsReminder(0)
                                 .setTaskHour(presenter.getHour())
                                 .setTaskMinute(presenter.getMinute())
                                 .setTaskDay(presenter.getDay())
@@ -153,6 +154,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                         presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
                         presenter.getTask().setTaskPriority(priority);
                         presenter.getTask().setTaskDoneState(0);
+                        presenter.getTask().setIsReminder(0);
                         if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
                         if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
                         if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());

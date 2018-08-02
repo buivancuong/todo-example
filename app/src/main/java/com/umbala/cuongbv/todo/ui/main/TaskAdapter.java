@@ -124,8 +124,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             checkBox = itemView.findViewById(R.id.checkBox);
             taskItem = itemView.findViewById(R.id.taskItem);
             switchReminder = itemView.findViewById(R.id.switchReminder);
-            switchReminder.setTextOn("ON");
-            switchReminder.setTextOff("OFF");
 
         }
 
@@ -139,6 +137,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
             reminder.setText(String.format("%d:%d - %d/%d/%d", task.getTaskHour(), task.getTaskMinute(), task.getTaskDay(), task.getTaskMonth() + 1, task.getTaskYear()));
+            if (task.getIsReminder() == 0) {
+                switchReminder.setChecked(false);
+            } else {
+                switchReminder.setChecked(true);
+            }
 
             taskItem.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -167,7 +170,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     if (clickListener != null && ischecked != b) {
                         task.setTaskDoneState(b ? 1 : 0);
                         clickListener.onDoneStateChanged(task);
-
                     }
                 }
             });
@@ -175,8 +177,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             switchReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (clickListener != null) {
-                        if (b) {
+                    boolean isOnReminder = (task.getIsReminder() == 1);
+                    if (clickListener != null && isOnReminder != b) {
+                        task.setIsReminder(b ? 1 : 0);
+                        if (task.getIsReminder() == 1) {
                             clickListener.onTurnOnReminder(task);
                         } else {
                             clickListener.onTurnOffReminder(task);

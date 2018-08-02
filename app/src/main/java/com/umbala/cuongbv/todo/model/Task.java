@@ -38,7 +38,8 @@ public class Task implements Comparable<Task>,Parcelable {
     private int taskYear;
     @ColumnInfo(name = "task_done_state")
     private int taskDoneState;
-    @NonNull
+    @ColumnInfo(name = "isReminder")
+    private int isReminder;
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
     private int taskID;
@@ -58,6 +59,7 @@ public class Task implements Comparable<Task>,Parcelable {
         this.taskMonth = builder.taskMonth;
         this.taskYear = builder.taskYear;
         this.taskDoneState = builder.taskDoneState;
+        this.isReminder = builder.isReminder;
     }
 
     protected Task(Parcel in) {
@@ -72,6 +74,7 @@ public class Task implements Comparable<Task>,Parcelable {
         taskYear = in.readInt();
         taskDoneState = in.readInt();
         taskID = in.readInt();
+        isReminder = in.readInt();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -123,6 +126,7 @@ public class Task implements Comparable<Task>,Parcelable {
         parcel.writeInt(taskYear);
         parcel.writeInt(taskDoneState);
         parcel.writeInt(taskID);
+        parcel.writeInt(isReminder);
     }
 
     public static class Builder {
@@ -137,6 +141,12 @@ public class Task implements Comparable<Task>,Parcelable {
         private int taskMonth;
         private int taskYear;
         private int taskDoneState = 0;
+        private int isReminder = 0;
+
+        public Builder setIsReminder(int reminder) {
+            isReminder = reminder;
+            return this;
+        }
 
         public Builder setTaskName(String name) {
             taskName = name;
@@ -281,4 +291,11 @@ public class Task implements Comparable<Task>,Parcelable {
         this.taskEstimateTime = taskEstimateTime;
     }
 
+    public int getIsReminder() {
+        return isReminder;
+    }
+
+    public void setIsReminder(int isReminder) {
+        this.isReminder = isReminder;
+    }
 }
