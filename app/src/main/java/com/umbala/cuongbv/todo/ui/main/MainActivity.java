@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         Intent onReminderIntent = new Intent(MainActivity.this, AlarmService.class);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(task.getTaskYear(), task.getTaskMonth(), task.getTaskDay(), task.getTaskHour(), task.getTaskMinute());
+        calendar.set(task.getTaskYear(), task.getTaskMonth(), task.getTaskDay(), task.getTaskHour(), task.getTaskMinute(), 0);
 
         onReminderIntent.putExtra("Task Content", task.getTaskContent());
         onReminderIntent.putExtra("Task Name", task.getTaskName());

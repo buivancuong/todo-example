@@ -15,7 +15,6 @@ public class AlarmService extends Service {
     String name;
     String content;
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
