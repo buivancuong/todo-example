@@ -103,7 +103,7 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(MainActivity.getStartIntent(EditActivity.this));
+                finish();
             }
         });
 
@@ -139,13 +139,6 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                                 presenter.getMinute(),
                                 0);
 
-
-//                    Log.i("Year", presenter.getYear() + "");
-//                    Log.i("Month", presenter.getMonth() + "");
-//                    Log.i("Day", presenter.getDay() + "");
-//                    Log.i("Hour", presenter.getHour() + "");
-//                    Log.i("Minute", presenter.getMinute() + "");
-
                         presenter.addTask(task);
 
                     } else {
@@ -167,13 +160,6 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
                                 presenter.getTask().getTaskHour(),
                                 presenter.getTask().getTaskMinute(),
                                 0);
-
-
-//                    Log.i("Year", presenter.getYear() + "");
-//                    Log.i("Month", presenter.getMonth() + "");
-//                    Log.i("Day", presenter.getDay() + "");
-//                    Log.i("Hour", presenter.getHour() + "");
-//                    Log.i("Minute", presenter.getMinute() + "");
 
                         presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
 

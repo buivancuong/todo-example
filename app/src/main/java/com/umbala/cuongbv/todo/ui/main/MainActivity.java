@@ -9,12 +9,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -58,7 +60,31 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         taskAdapter.setClickListener(this);
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new TaskDecoration());
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.delTask(((TaskAdapter.TaskViewHolder) viewHolder).task.getTaskID());
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        taskAdapter.notifyDataSetChanged();
+                    }
+                }).create();
+                alertDialog.setMessage("Delete this task?");
+                alertDialog.show();
+            }
+        };
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         presenter = new Presenter(TaskRepo.getInstance(this), this);
         presenter.getTaskList();
@@ -120,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
     @Override
     public void onTurnOnReminder(Task task) {
+        presenter.updateTask(task);
         Intent onReminderIntent = new Intent(MainActivity.this, AlarmService.class);
 
         Calendar calendar = Calendar.getInstance();
@@ -135,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
     @Override
     public void onTurnOffReminder(Task task) {
+        presenter.updateTask(task);
         Intent offReminderIntent = new Intent(MainActivity.this, AlarmService.class);
         offReminderIntent.putExtra("Task ID", task.getTaskID());
         offReminderIntent.putExtra("Turn Off", false);

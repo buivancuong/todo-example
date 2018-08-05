@@ -113,6 +113,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         CheckBox checkBox;
         ConstraintLayout taskItem;
         Switch switchReminder;
+        public Task task;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,6 +135,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
          */
         @SuppressLint("DefaultLocale")
         public void bindTask(final Task task) {
+            this.task = task;
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
             reminder.setText(String.format("%d:%d - %d/%d/%d", task.getTaskHour(), task.getTaskMinute(), task.getTaskDay(), task.getTaskMonth() + 1, task.getTaskYear()));
