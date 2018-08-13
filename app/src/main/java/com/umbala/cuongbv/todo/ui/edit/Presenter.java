@@ -86,7 +86,6 @@ public class Presenter implements EditContractor.Presenter {
     public void setTask(Task task) {
         if (task != null) {
             view.showEditTask(task);
-
         }
         this.task = task;
     }

@@ -1,25 +1,22 @@
 package com.umbala.cuongbv.todo.ui.main;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.umbala.cuongbv.todo.R;
 import com.umbala.cuongbv.todo.data.TaskRepo;
@@ -35,19 +32,22 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MainContractor.View, TaskAdapter.ClickListener {
 
     RecyclerView recyclerView;
-    TextView textViewEstimateTime;
+    TextView textViewEstimateTime, noTextView;
     TaskAdapter taskAdapter;
     Presenter presenter;
     ProgressDialog mProgressDialog;
+    Toolbar mainToolbar;
 
-    public static Intent getStartIntent(Context context){
-        return new Intent(context, MainActivity.class);
-    };
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainToolbar = (Toolbar) findViewById(R.id.mainToolBar);
+        setSupportActionBar(mainToolbar);
+
+        noTextView = findViewById(R.id.noTextView);
 
         recyclerView = findViewById(R.id.tasklist);
         textViewEstimateTime = findViewById(R.id.textView);
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new TaskDecoration());
+
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
@@ -109,6 +110,11 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
 
     @Override
     public void showTaskList(List<Task> tasks) {
+        if (tasks == null || tasks.isEmpty()) {
+            noTextView.setVisibility(View.VISIBLE);
+        } else {
+            noTextView.setVisibility(View.INVISIBLE);
+        }
         taskAdapter.setTasks(tasks);
     }
 

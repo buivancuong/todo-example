@@ -1,9 +1,13 @@
 package com.umbala.cuongbv.todo.ui.main;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,9 +118,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         ConstraintLayout taskItem;
         Switch switchReminder;
         public Task task;
+        CardView cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            cardView = itemView.findViewById(R.id.task);
 
             taskname = itemView.findViewById(R.id.taskname);
             taskDescription = itemView.findViewById(R.id.taskdescription);
@@ -136,6 +143,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         @SuppressLint("DefaultLocale")
         public void bindTask(final Task task) {
             this.task = task;
+
+            if (task.getTaskDoneState() != 0) {
+                cardView.setCardBackgroundColor(ContextCompat.getColor(taskname.getContext(), R.color.colorDone));
+            } else {
+                cardView.setCardBackgroundColor(Color.WHITE);
+            }
+
             taskname.setText(task.getTaskName());
             taskDescription.setText(task.getTaskContent());
             reminder.setText(String.format("%d:%d - %d/%d/%d", task.getTaskHour(), task.getTaskMinute(), task.getTaskDay(), task.getTaskMonth() + 1, task.getTaskYear()));

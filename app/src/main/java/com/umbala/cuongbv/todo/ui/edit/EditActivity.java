@@ -1,14 +1,20 @@
 package com.umbala.cuongbv.todo.ui.edit;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -17,8 +23,6 @@ import android.widget.TimePicker;
 import com.umbala.cuongbv.todo.R;
 import com.umbala.cuongbv.todo.data.TaskRepo;
 import com.umbala.cuongbv.todo.model.Task;
-import com.umbala.cuongbv.todo.ui.main.AlarmService;
-import com.umbala.cuongbv.todo.ui.main.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +34,9 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
 
     EditText taskName, taskContent, taskEstimateTime, taskTime, taskDate;
     RadioButton greenButton, yellowButton, redButton;
-    Button okButton, cancelButton;
+//    Button okButton, cancelButton;
+    Toolbar edtToolBar;
+
 
     public static Intent getStartIntent(Context context, Task task) {
         Intent intent = new Intent(context, EditActivity.class);
@@ -53,15 +59,25 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
         greenButton = findViewById(R.id.radioButtonGreen);
         yellowButton = findViewById(R.id.radioButtonYellow);
         redButton = findViewById(R.id.radioButtonRed);
-        okButton = findViewById(R.id.buttonOK);
-        cancelButton = findViewById(R.id.buttonCancel);
 
-        findViewById(R.id.buttonCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+//        okButton = findViewById(R.id.buttonOK);
+//        cancelButton = findViewById(R.id.buttonCancel);
+
+        edtToolBar = (Toolbar) findViewById(R.id.edtToolBar);
+        setSupportActionBar(edtToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // Back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue)));
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(taskName, InputMethodManager.SHOW_IMPLICIT);
+
+//        findViewById(R.id.buttonCancel).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
 
         taskTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,80 +116,161 @@ public class EditActivity extends AppCompatActivity implements EditContractor.Vi
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    int priority = 0;
-                    if (greenButton.isChecked()) priority = 1;
-                    if (yellowButton.isChecked()) priority = 2;
-                    if (redButton.isChecked()) priority = 3;
-                    Calendar calendar = Calendar.getInstance();
-
-                    if (presenter.getTask() == null) {
-                        Task task = new Task.Builder()
-                                .setTaskName(taskName.getText().toString())
-                                .setTaskContent(taskContent.getText().toString())
-                                .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
-                                .setTaskPriority(priority)
-                                .setTaskDoneState(0)
-                                .setIsReminder(0)
-                                .setTaskHour(presenter.getHour())
-                                .setTaskMinute(presenter.getMinute())
-                                .setTaskDay(presenter.getDay())
-                                .setTaskMonth(presenter.getMonth())
-                                .setTaskYear(presenter.getYear())
-                                .builder();
-
-                        calendar.set(presenter.getYear(),
-                                presenter.getMonth(),
-                                presenter.getDay(),
-                                presenter.getHour(),
-                                presenter.getMinute(),
-                                0);
-
-                        presenter.addTask(task);
-
-                    } else {
-                        presenter.getTask().setTaskName(taskName.getText().toString());
-                        presenter.getTask().setTaskContent(taskContent.getText().toString());
-                        presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
-                        presenter.getTask().setTaskPriority(priority);
-                        presenter.getTask().setTaskDoneState(0);
-                        presenter.getTask().setIsReminder(0);
-                        if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
-                        if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
-                        if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
-                        if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
-                        if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
-
-                        calendar.set(presenter.getTask().getTaskYear(),
-                                presenter.getTask().getTaskMonth(),
-                                presenter.getTask().getTaskDay(),
-                                presenter.getTask().getTaskHour(),
-                                presenter.getTask().getTaskMinute(),
-                                0);
-
-                        presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
-
-                    }
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
+//
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    int priority = 0;
+//                    if (greenButton.isChecked()) priority = 1;
+//                    if (yellowButton.isChecked()) priority = 2;
+//                    if (redButton.isChecked()) priority = 3;
+//                    Calendar calendar = Calendar.getInstance();
+//
+//                    if (presenter.getTask() == null) {
+//                        Task task = new Task.Builder()
+//                                .setTaskName(taskName.getText().toString())
+//                                .setTaskContent(taskContent.getText().toString())
+//                                .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
+//                                .setTaskPriority(priority)
+//                                .setTaskDoneState(0)
+//                                .setIsReminder(0)
+//                                .setTaskHour(presenter.getHour())
+//                                .setTaskMinute(presenter.getMinute())
+//                                .setTaskDay(presenter.getDay())
+//                                .setTaskMonth(presenter.getMonth())
+//                                .setTaskYear(presenter.getYear())
+//                                .builder();
+//
+//                        calendar.set(presenter.getYear(),
+//                                presenter.getMonth(),
+//                                presenter.getDay(),
+//                                presenter.getHour(),
+//                                presenter.getMinute(),
+//                                0);
+//
+//                        presenter.addTask(task);
+//
+//                    } else {
+//                        presenter.getTask().setTaskName(taskName.getText().toString());
+//                        presenter.getTask().setTaskContent(taskContent.getText().toString());
+//                        presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
+//                        presenter.getTask().setTaskPriority(priority);
+//                        presenter.getTask().setTaskDoneState(0);
+//                        presenter.getTask().setIsReminder(0);
+//                        if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
+//                        if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
+//                        if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
+//                        if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
+//                        if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
+//
+//                        calendar.set(presenter.getTask().getTaskYear(),
+//                                presenter.getTask().getTaskMonth(),
+//                                presenter.getTask().getTaskDay(),
+//                                presenter.getTask().getTaskHour(),
+//                                presenter.getTask().getTaskMinute(),
+//                                0);
+//
+//                        presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
+//
+//                    }
+//
+//                }catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
         Task task = getIntent().getParcelableExtra(TASK);
         presenter.setTask(task);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void saveTask() {
+        try {
+            int priority = 0;
+            if (greenButton.isChecked()) priority = 1;
+            if (yellowButton.isChecked()) priority = 2;
+            if (redButton.isChecked()) priority = 3;
+            Calendar calendar = Calendar.getInstance();
+
+            if (presenter.getTask() == null) {
+                Task task = new Task.Builder()
+                        .setTaskName(taskName.getText().toString())
+                        .setTaskContent(taskContent.getText().toString())
+                        .setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()))
+                        .setTaskPriority(priority)
+                        .setTaskDoneState(0)
+                        .setIsReminder(0)
+                        .setTaskHour(presenter.getHour())
+                        .setTaskMinute(presenter.getMinute())
+                        .setTaskDay(presenter.getDay())
+                        .setTaskMonth(presenter.getMonth())
+                        .setTaskYear(presenter.getYear())
+                        .builder();
+
+                calendar.set(presenter.getYear(),
+                        presenter.getMonth(),
+                        presenter.getDay(),
+                        presenter.getHour(),
+                        presenter.getMinute(),
+                        0);
+
+                presenter.addTask(task);
+
+            } else {
+                presenter.getTask().setTaskName(taskName.getText().toString());
+                presenter.getTask().setTaskContent(taskContent.getText().toString());
+                presenter.getTask().setTaskEstimateTime(Double.valueOf(taskEstimateTime.getText().toString()));
+                presenter.getTask().setTaskPriority(priority);
+                presenter.getTask().setTaskDoneState(0);
+                presenter.getTask().setIsReminder(0);
+                if (presenter.getHour() != 0) presenter.getTask().setTaskHour(presenter.getHour());
+                if (presenter.getMinute() != 0) presenter.getTask().setTaskMinute(presenter.getMinute());
+                if (presenter.getDay() != 0) presenter.getTask().setTaskDay(presenter.getDay());
+                if (presenter.getMonth() != 0) presenter.getTask().setTaskMonth(presenter.getMonth());
+                if (presenter.getYear() != 0) presenter.getTask().setTaskYear(presenter.getYear());
+
+                calendar.set(presenter.getTask().getTaskYear(),
+                        presenter.getTask().getTaskMonth(),
+                        presenter.getTask().getTaskDay(),
+                        presenter.getTask().getTaskHour(),
+                        presenter.getTask().getTaskMinute(),
+                        0);
+
+                presenter.addTask(presenter.getTask()); // addTask la them getTask vao DB
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_OK)
+            saveTask();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -4,18 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
     tools:context=".ui.edit.EditActivity">
     
     <android.support.v7.widget.Toolbar
         android:id="@+id/edtToolBar"
-        android:theme="@style/Theme.AppCompat"
+        android:theme="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="@color/blue"
-        app:titleTextColor="@color/white"
-        android:translationZ="11dp"
-        android:elevation="5dp">
+        android:elevation="4dp">
     </android.support.v7.widget.Toolbar>
 
     <EditText
@@ -28,8 +24,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/textViewTaskContent"
@@ -38,7 +33,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:hint="Description of this Task"
-        android:textStyle="bold"
+        android:textAlignment="textStart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTaskName" />
 

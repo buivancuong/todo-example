@@ -42,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setSmallIcon(R.drawable.ic_launcher_background)
                     .setContentText(intent.getStringExtra("Task Content"))
                     .setContentTitle(intent.getStringExtra("Task Name"))
-                    .setOngoing(true)
+                    .setOngoing(false)// if "true", can't cancel your notification (except NotificationManger.cancel(); )
                     .setContentIntent(PendingIntent.getBroadcast(context, intent.getIntExtra("Task ID", 0), stopIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                     .build();
 
